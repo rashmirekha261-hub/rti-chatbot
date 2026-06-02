@@ -4,4 +4,3 @@ langchain-openai
 langchain-community
 chromadb
 pypdf
-langchain-classic
