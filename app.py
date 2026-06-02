@@ -3,7 +3,7 @@ import os
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
@@ -35,13 +35,13 @@ def initialize_vector_store():
         splits = text_splitter.split_documents(docs)
         
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-        vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
+        vectorstore = FAISS.from_documents(documents=splits, embedding=embeddings)
         
         return vectorstore.as_retriever(search_kwargs={"k": 5})
 
 retriever = initialize_vector_store()
 
-# 4. Setup LLM and RAG Pipeline Using Modern LCEL (No old chains needed!)
+# 4. Setup LLM and RAG Pipeline
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2)
 
 system_prompt = (
